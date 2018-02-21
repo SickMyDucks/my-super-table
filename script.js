@@ -8,7 +8,7 @@ window.onload = function() {
             generateTable(columns, users);
             setTableHeaderWidth();
             enableRowHover();
-            rowStyles('line');
+            rowStyles('zebra');
         }
     });
 }
@@ -83,7 +83,7 @@ function setRowHeight(height) {
 function setTableHeaderWidth() {
     headerCells = document.querySelectorAll('.table-header');
     for (i = 0; i < headerCells.length; i++) {
-        headerCells[i].style.width = (headerCells[i].parentElement.offsetWidth - 20) +'px';
+        headerCells[i].style.width = (headerCells[i].parentElement.offsetWidth - 18) +'px';
     }
 }
 
@@ -122,5 +122,7 @@ function rowStyles(style) {
 
     if (style === 'line') {
         rowsStyleSheet.insertRule('.col div {border-width: 1px 0; border-style: solid; border-color: #CFDFE5;}', 0);
+    } else if (style === 'zebra') {
+        rowsStyleSheet.insertRule('.col div:nth-child(even) {background-color: #CFDFE5}', 0);
     }
 }
