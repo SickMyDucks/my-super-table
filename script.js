@@ -1,8 +1,4 @@
 window.onload = function() {
-    styleSheet = document.createElement("style");
-    styleSheet.type = "text/css"; 
-    document.head.append(styleSheet);
-    styleSheet = styleSheet.sheet;
     $.ajax({
         method: 'get',
         dataType: 'json',
@@ -12,10 +8,16 @@ window.onload = function() {
             generateTable(columns, users);
             setTableHeaderWidth();
             enableRowHover();
+            rowStyles('line');
         }
     });
 }
 
+/**
+ * Generates the table
+ * @param {array} columns 
+ * @param {object} users 
+ */
 function generateTable(columns, users) {
     for (var i in columns) {
         var column = CreateElement('div', 'col', '');
@@ -89,16 +91,31 @@ function setTableHeaderWidth() {
  * Enables color switch when hovering rows  
  */
 function enableRowHover() {
+    hoverStyleSheet = document.createElement("style");
+    hoverStyleSheet.type = "text/css"; 
+    document.head.append(hoverStyleSheet);
+    hoverStyleSheet = hoverStyleSheet.sheet;
     var cells = document.querySelectorAll('.cell');
     for (var i = 0; i < cells.length; i++) {
         cells[i].addEventListener('mouseover', function (event) {
             var collection = this.parentElement.children;
             collection = Array.from(collection);
             rowIndex = collection.indexOf(this);
-            if (typeof styleSheet.cssRules[0] != 'undefined') {
-                styleSheet.deleteRule(0);
+            if (typeof hoverStyleSheet.cssRules[0] != 'undefined') {
+                hoverStyleSheet.deleteRule(0);
             }
-            styleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
+            hoverStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
         });
+    }
+}
+
+function rowStyles(style) {
+    rowsStyleSheet = document.createElement("style");
+    rowsStyleSheet.type = "text/css"; 
+    document.head.append(rowsStyleSheet);
+    rowsStyleSheet = rowsStyleSheet.sheet;
+
+    if (style === 'line') {
+        rowsStyleSheet.insertRule('.col div {border-width: 1px 0; border-style: solid; border-color: #CFDFE5;}', 0);
     }
 }
