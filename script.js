@@ -1,7 +1,7 @@
 window.onload = function() {
     styleSheet = document.createElement("style");
     styleSheet.type = "text/css"; 
-    document.head.insertBefore(styleSheet, null);
+    document.head.append(styleSheet);
     styleSheet = styleSheet.sheet;
     $.ajax({
         method: 'get',
@@ -9,30 +9,23 @@ window.onload = function() {
         url: 'users.json',
         success: function (users) {
             columns = ['email', 'firstName', 'lastName', 'birthdate'];
-            for (var i in columns) {
-                var column = CreateElement('div', 'col', '');
-                column.append(CreateElement('div', 'table-header', columns[i]));
-                column.append(CreateElement('div', 'hide', '.'));
-                for (var j in users) {
-                    column.append(CreateElement('div', 'cell', users[j][columns[i]]));
-                }
-                getElement('.container').append(column);
-            }
+            generateTable(columns, users);
             setTableHeaderWidth();
-            var cells = document.querySelectorAll('.cell');
-            for (var i = 0; i < cells.length; i++) {
-                cells[i].addEventListener('mouseover', function(event) {
-                    var collection = this.parentElement.children;
-                    collection = Array.from(collection);
-                    rowIndex = collection.indexOf(this);
-                    if (typeof styleSheet.cssRules[0] != 'undefined') {
-                        styleSheet.deleteRule(0);
-                    }
-                    styleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
-                });
-            }
+            enableRowHover();
         }
     });
+}
+
+function generateTable(columns, users) {
+    for (var i in columns) {
+        var column = CreateElement('div', 'col', '');
+        column.append(CreateElement('div', 'table-header', columns[i]));
+        column.append(CreateElement('div', 'hide', '.'));
+        for (var j in users) {
+            column.append(CreateElement('div', 'cell', users[j][columns[i]]));
+        }
+        getElement('.container').append(column);
+    }
 }
 
 /**
@@ -69,6 +62,10 @@ function sortColumnsOrder(columns, firstColumn) {
     return columns;
 }
 
+/**
+ * Sets rows height
+ * @param {number} height 
+ */
 function setRowHeight(height) {
     if (typeof height != undefined) {
         cells = document.querySelectorAll('.col div');
@@ -78,9 +75,30 @@ function setRowHeight(height) {
     }
 }
 
+/**
+ * Fixes table-header element that took the wrong parent's width
+ */
 function setTableHeaderWidth() {
     headerCells = document.querySelectorAll('.table-header');
     for (i = 0; i < headerCells.length; i++) {
         headerCells[i].style.width = (headerCells[i].parentElement.offsetWidth - 20) +'px';
+    }
+}
+
+/**
+ * Enables color switch when hovering rows  
+ */
+function enableRowHover() {
+    var cells = document.querySelectorAll('.cell');
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].addEventListener('mouseover', function (event) {
+            var collection = this.parentElement.children;
+            collection = Array.from(collection);
+            rowIndex = collection.indexOf(this);
+            if (typeof styleSheet.cssRules[0] != 'undefined') {
+                styleSheet.deleteRule(0);
+            }
+            styleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
+        });
     }
 }
