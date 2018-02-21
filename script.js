@@ -1,4 +1,8 @@
 window.onload = function() {
+    styleSheet = document.createElement("style");
+    styleSheet.type = "text/css"; 
+    document.head.insertBefore(styleSheet, null);
+    styleSheet = styleSheet.sheet;
     $.ajax({
         method: 'get',
         dataType: 'json',
@@ -10,9 +14,22 @@ window.onload = function() {
                 column.append(CreateElement('div', 'table-header', columns[i]));
                 column.append(CreateElement('div', 'hide', '.'));
                 for (var j in users) {
-                    column.append(CreateElement('div', '', users[j][columns[i]]));
+                    column.append(CreateElement('div', 'cell', users[j][columns[i]]));
                 }
                 getElement('.container').append(column);
+            }
+            setTableHeaderWidth();
+            var cells = document.querySelectorAll('.cell');
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].addEventListener('mouseover', function(event) {
+                    var collection = this.parentElement.children;
+                    collection = Array.from(collection);
+                    rowIndex = collection.indexOf(this);
+                    if (typeof styleSheet.cssRules[0] != 'undefined') {
+                        styleSheet.deleteRule(0);
+                    }
+                    styleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
+                });
             }
         }
     });
@@ -47,7 +64,6 @@ function CreateElement(tag, className, content) {
  * @returns {array} columns
  */
 function sortColumnsOrder(columns, firstColumn) {
-    console.table(columns);
     columns.splice(columns.indexOf(firstColumn), 1);
     columns.unshift(firstColumn);
     return columns;
@@ -59,5 +75,12 @@ function setRowHeight(height) {
         for (i = 0; i < cells.length; i++) {
             cells[i].style.lineHeight = height+ 'px';
         }
+    }
+}
+
+function setTableHeaderWidth() {
+    headerCells = document.querySelectorAll('.table-header');
+    for (i = 0; i < headerCells.length; i++) {
+        headerCells[i].style.width = (headerCells[i].parentElement.offsetWidth - 20) +'px';
     }
 }
