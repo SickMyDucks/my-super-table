@@ -107,6 +107,11 @@ function enableRowHover() {
             hoverStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
         });
     }
+    getElement('#super-table').onmouseout = function() {
+        if (typeof hoverStyleSheet.cssRules[0] != 'undefined') {
+            hoverStyleSheet.deleteRule(0);
+        }
+    }
 }
 
 function rowStyles(style) {
