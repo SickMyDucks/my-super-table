@@ -22,16 +22,16 @@ body {
     line-height: 30px;
     padding: 0 10px;
     display: block;
-}
-
-.col:first-child .table-header {
-    background-color: white;
-    width: 90%;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #CFDFE5;
 }
 
 .table-header {
+    padding: 0;
     position: absolute;
     top: 5px;
+    background-color: white;
 }
 
 .container {
@@ -39,4 +39,5 @@ body {
     overflow: scroll;
     display: flex;
     flex-direction: row;
+    border-collapse: collapse;
 }
