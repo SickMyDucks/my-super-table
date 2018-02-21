@@ -12,10 +12,18 @@ window.onload = function() {
                 for (var j in users) {
                     column.append(CreateElement('div', '', users[j][columns[i]]));
                 }
-                document.querySelector('.container').append(column);
+                getElement('.container').append(column);
             }
         }
     });
+}
+
+/**
+ * document.querySelector alias
+ * @param {string} selector 
+ */
+function getElement(selector) {
+    return document.querySelector(selector);
 }
 
 /**
@@ -43,4 +51,13 @@ function sortColumnsOrder(columns, firstColumn) {
     columns.splice(columns.indexOf(firstColumn), 1);
     columns.unshift(firstColumn);
     return columns;
+}
+
+function setRowHeight(height) {
+    if (typeof height != undefined) {
+        cells = document.querySelectorAll('.col div');
+        for (i = 0; i < cells.length; i++) {
+            cells[i].style.lineHeight = height+ 'px';
+        }
+    }
 }
