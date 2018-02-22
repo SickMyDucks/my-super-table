@@ -5,6 +5,8 @@ window.onload = function() {
         url: 'users.json',
         success: function (users) {
             columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
+            isHeaderFixed(true);
+            isfirstColumnFixed(true);
             generateTable(columns, users);
             setTableHeaderWidth();
             rowStyles('zebra');
@@ -125,5 +127,24 @@ function rowStyles(style) {
     } else if (style === 'zebra') {
         rowsStyleSheet.insertRule('.col div:nth-child(even) {background-color: #CFDFE5}', 0);
         rowsStyleSheet.insertRule('.col div:nth-child(odd) {background-color: #FFF}', 1);
+    }
+}
+
+function isHeaderFixed(bool) {
+    if (bool) {
+        headerStyleSheet = document.createElement("style");
+        headerStyleSheet.type = "text/css"; 
+        document.head.append(headerStyleSheet);
+        headerStyleSheet = headerStyleSheet.sheet;
+        headerStyleSheet.insertRule('.table-header {padding: 0; position: sticky; top: 0; background-color: white;}', 0);
+    }
+}
+function isfirstColumnFixed(bool) {
+    if (bool) {
+        columnStyleSheet = document.createElement("style");
+        columnStyleSheet.type = "text/css"; 
+        document.head.append(columnStyleSheet);
+        columnStyleSheet = columnStyleSheet.sheet;
+        columnStyleSheet.insertRule('.col:first-child {position: sticky; left: 0; z-index: 1;}  ', 0);
     }
 }

@@ -25,19 +25,6 @@ body {
     white-space: nowrap;
 }
 
-.col:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-}
-
-.table-header {
-    padding: 0;
-    position: sticky;
-    top: 0;
-    background-color: white;
-}
-
 .container {
     height: 70vh;
     width: 90vw;
