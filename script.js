@@ -4,11 +4,11 @@ window.onload = function() {
         dataType: 'json',
         url: 'users.json',
         success: function (users) {
-            columns = ['email', 'firstName', 'lastName', 'birthdate'];
+            columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
             generateTable(columns, users);
             setTableHeaderWidth();
-            enableRowHover();
             rowStyles('zebra');
+            enableRowHover();
         }
     });
 }
@@ -22,7 +22,7 @@ function generateTable(columns, users) {
     for (var i in columns) {
         var column = CreateElement('div', 'col', '');
         column.append(CreateElement('div', 'table-header', columns[i]));
-        column.append(CreateElement('div', 'hide', '.'));
+        // column.append(CreateElement('div', 'hide', '.'));
         for (var j in users) {
             column.append(CreateElement('div', 'cell', users[j][columns[i]]));
         }
@@ -124,5 +124,6 @@ function rowStyles(style) {
         rowsStyleSheet.insertRule('.col div {border-width: 1px 0; border-style: solid; border-color: #CFDFE5;}', 0);
     } else if (style === 'zebra') {
         rowsStyleSheet.insertRule('.col div:nth-child(even) {background-color: #CFDFE5}', 0);
+        rowsStyleSheet.insertRule('.col div:nth-child(odd) {background-color: #FFF}', 1);
     }
 }
