@@ -118,6 +118,10 @@ function enableRowHover() {
     }
 }
 
+/**
+ * Determines Rows' style
+ * @param {string} style 'free' — 'line' — 'zebra'
+ */
 function rowStyles(style) {
     rowsStyleSheet = document.createElement("style");
     rowsStyleSheet.type = "text/css"; 
@@ -132,6 +136,10 @@ function rowStyles(style) {
     }
 }
 
+/**
+ * Enables or not the first row to be fixed when scrolling
+ * @param {bool} bool 
+ */
 function isHeaderFixed(bool) {
     if (bool) {
         headerStyleSheet = document.createElement("style");
@@ -141,6 +149,11 @@ function isHeaderFixed(bool) {
         headerStyleSheet.insertRule('.table-header {padding: 0; position: sticky; top: 0; background-color: white;}', 0);
     }
 }
+
+/**
+ * Enables or not the first column fixed when scrolling
+ * @param {bool} bool 
+ */
 function isfirstColumnFixed(bool) {
     if (bool) {
         columnStyleSheet = document.createElement("style");
