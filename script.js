@@ -21,6 +21,7 @@ window.onload = function() {
  * @param {object} users 
  */
 function generateTable(columns, users) {
+    container = CreateElement('div', 'container', '');
     for (var i in columns) {
         var column = CreateElement('div', 'col', '');
         column.append(CreateElement('div', 'table-header', columns[i]));
@@ -28,8 +29,9 @@ function generateTable(columns, users) {
         for (var j in users) {
             column.append(CreateElement('div', 'cell', users[j][columns[i]]));
         }
-        getElement('.container').append(column);
+        container.append(column);
     }
+    getElement('#super-table').append(container);
 }
 
 /**
