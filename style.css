@@ -22,20 +22,25 @@ body {
     line-height: 30px;
     padding: 0 10px;
     display: block;
-    border-width: 1px 0;
-    border-style: solid;
-    border-color: #CFDFE5;
+    white-space: nowrap;
+}
+
+.col:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
 }
 
 .table-header {
     padding: 0;
-    position: absolute;
-    top: 5px;
+    position: sticky;
+    top: 0;
     background-color: white;
 }
 
 .container {
     height: 50vh;
+    width: 50vw;
     overflow: scroll;
     display: flex;
     flex-direction: row;
