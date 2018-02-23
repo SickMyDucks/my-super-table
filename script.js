@@ -1,26 +1,39 @@
 window.onload = function() {
-    $.ajax({
-        method: 'get',
-        dataType: 'json',
-        url: 'users.json',
-        success: function (users) {
-            columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
-            isHeaderFixed(true);
-            isfirstColumnFixed(true);
-            generateTable(columns, users);
-            setTableHeaderWidth();
-            rowStyles('zebra');
-            enableRowHover();
+    target = getElement('#super-table');
+    columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
+    object = {
+        element: document.querySelector('#super-table'),
+        data: users,
+        options:{
+            firstColumn: 'email',
+            rowMouseOver: true,
+            rowStyle: 'zebra',
+            fixedHeader : true,
+            fixedColumn: true
         }
-    });
+    }
+    initSuperTable(object);
+}
+
+function initSuperTable(params) {
+    var target = params.element;
+    var users = params.data;
+    users = sortUsersBy(users, 'age', false);
+    isHeaderFixed(params.options.fixedHeader);
+    isfirstColumnFixed(params.options.fixedColumn);
+    generateTable(columns, users, target);
+    setTableHeaderWidth();
+    rowStyles(params.options.rowStyle);
+    enableRowHover(params.options.rowMouseOver);
 }
 
 /**
- * Generates the table
+ * Generates the table with columns array, users data, where to put the generated table
  * @param {array} columns 
  * @param {object} users 
+ * @param {element} target
  */
-function generateTable(columns, users) {
+function generateTable(columns, users, target) {
     container = CreateElement('div', 'container', '');
     for (var i in columns) {
         var column = CreateElement('div', 'col', '');
@@ -31,7 +44,7 @@ function generateTable(columns, users) {
         }
         container.append(column);
     }
-    getElement('#super-table').append(container);
+    target.append(container);
 }
 
 /**
@@ -138,7 +151,7 @@ function rowStyles(style) {
 
 /**
  * Enables or not the first row to be fixed when scrolling
- * @param {bool} bool 
+ * @param {boolean} bool 
  */
 function isHeaderFixed(bool) {
     if (bool) {
@@ -152,7 +165,7 @@ function isHeaderFixed(bool) {
 
 /**
  * Enables or not the first column fixed when scrolling
- * @param {bool} bool 
+ * @param {boolean} bool 
  */
 function isfirstColumnFixed(bool) {
     if (bool) {
@@ -162,4 +175,27 @@ function isfirstColumnFixed(bool) {
         columnStyleSheet = columnStyleSheet.sheet;
         columnStyleSheet.insertRule('.col:first-child {position: sticky; left: 0; z-index: 1;}  ', 0);
     }
+}
+
+/**
+ * Sorts users by the given property by ascending order or not
+ * @param {object} users 
+ * @param {string} property
+ * @param {boolean} asc
+ */
+function sortUsersBy(users, property, asc) {
+    var sortable = [];
+    for (var user in users) {
+        sortable.push(users[user]);
+    }
+    sortable.sort(function(a, b){
+        if(a[property] < b[property]) return -1;
+        if(a[property] > b[property]) return 1;
+        return 0;
+    })
+
+    if (asc === false) {
+        sortable.reverse();
+    }
+    return sortable;
 }
