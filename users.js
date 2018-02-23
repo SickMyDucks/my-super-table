@@ -1,3 +1,18 @@
+var columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
+
+defaultOptions = {
+  firstColumn: columns[0],
+  rowHeight: 30,
+  rowMouseOver: true,
+  rowStyle: 'free',
+  fixedHeader: true,
+  fixedColumn: true,
+  sorts: {
+    by: false,
+    asc: true
+  }
+}
+
 var users = [
   {
     "id": "5a64c56d505c1226e1fd1c83",
