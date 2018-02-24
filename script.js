@@ -1,3 +1,7 @@
+/**
+ * Initializes the table with the given properties. See users.js for default options
+ * @param {object} params 
+ */
 function initSuperTable(params) {
     var target = params.element;
     var users = params.data;
