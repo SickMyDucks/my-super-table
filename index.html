@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="style.css">
-    <script src="jquery.js"></script>
     <script src="users.js"></script>
     <script src="script.js"></script>
     <title>My Super Table</title>
@@ -13,5 +12,27 @@
 <body>
     <div id="super-table">
     </div>
+    <script>
+        var target = getElement('#super-table'); //Element where table is generated
+        var object = {
+            element: target,
+            data: users,
+            options: {
+                fixedHeader: false,
+                fixedColumn: false,
+                rowHeight: 50,
+                rowStyle: 'line',
+                rowHoverHeight: {
+                    enabled: true,
+                    height: 70
+                },
+                sorts: {
+                    by: 'age',
+                    asc: true
+                }
+            }
+        }
+        initSuperTable(object);
+    </script>
 </body>
 </html>
