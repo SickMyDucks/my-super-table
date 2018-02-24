@@ -1,30 +1,15 @@
-window.onload = function() {
-    target = getElement('#super-table');
-    columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
-    object = {
-        element: document.querySelector('#super-table'),
-        data: users,
-        options:{
-            firstColumn: 'email',
-            rowMouseOver: true,
-            rowStyle: 'zebra',
-            fixedHeader : true,
-            fixedColumn: true
-        }
-    }
-    initSuperTable(object);
-}
-
 function initSuperTable(params) {
     var target = params.element;
     var users = params.data;
-    users = sortUsersBy(users, 'age', false);
-    isHeaderFixed(params.options.fixedHeader);
+    params.options = extend(defaultOptions, params.options);
+    users = sortUsersBy(users, params.options.sorts.by, params.options.sorts.asc);
+    columns = sortColumnsOrder(columns, params.options.firstColumn);
     isfirstColumnFixed(params.options.fixedColumn);
-    generateTable(columns, users, target);
-    setTableHeaderWidth();
     rowStyles(params.options.rowStyle);
+    isHeaderFixed(params.options.fixedHeader);
+    generateTable(columns, params.data, params.element);
     enableRowHover(params.options.rowMouseOver);
+    setRowHeight(params.options.rowHeight);
 }
 
 /**
@@ -37,10 +22,9 @@ function generateTable(columns, users, target) {
     container = CreateElement('div', 'container', '');
     for (var i in columns) {
         var column = CreateElement('div', 'col', '');
-        column.append(CreateElement('div', 'table-header', columns[i]));
-        // column.append(CreateElement('div', 'hide', '.'));
+        column.append(CreateElement('div', 'table-header cell', columns[i]));
         for (var j in users) {
-            column.append(CreateElement('div', 'cell', users[j][columns[i]]));
+            column.append(CreateElement('div', '', users[j][columns[i]]));
         }
         container.append(column);
     }
@@ -50,9 +34,19 @@ function generateTable(columns, users, target) {
 /**
  * document.querySelector alias
  * @param {string} selector 
+ * @returns {object}
  */
 function getElement(selector) {
     return document.querySelector(selector);
+}
+
+/**
+ * document.querySelectorAll alias
+ * @param {string} selector 
+ * @returns {array}
+ */
+function getElements(selector) {
+    return document.querySelectorAll(selector);
 }
 
 /**
@@ -89,30 +83,25 @@ function setRowHeight(height) {
     if (typeof height != undefined) {
         cells = document.querySelectorAll('.col div');
         for (i = 0; i < cells.length; i++) {
-            cells[i].style.lineHeight = height+ 'px';
+            cells[i].style.lineHeight = height + 'px';
         }
     }
 }
 
 /**
- * Fixes table-header element that took the wrong parent's width
- */
-function setTableHeaderWidth() {
-    headerCells = document.querySelectorAll('.table-header');
-    for (i = 0; i < headerCells.length; i++) {
-        headerCells[i].style.width = (headerCells[i].parentElement.offsetWidth - 18) +'px';
-    }
-}
-
-/**
  * Enables color switch when hovering rows  
+ * @param {boolean} bool
  */
-function enableRowHover() {
+function enableRowHover(bool) {
+    if (!bool) {
+        return false;
+    }
     hoverStyleSheet = document.createElement("style");
-    hoverStyleSheet.type = "text/css"; 
+    hoverStyleSheet.type = "text/css";
+    hoverStyleSheet.id = 'hoverStyleSheet';
     document.head.append(hoverStyleSheet);
     hoverStyleSheet = hoverStyleSheet.sheet;
-    var cells = document.querySelectorAll('.cell');
+    var cells = document.querySelectorAll('.col div:not(.table-header)');
     for (var i = 0; i < cells.length; i++) {
         cells[i].addEventListener('mouseover', function (event) {
             var collection = this.parentElement.children;
@@ -124,7 +113,7 @@ function enableRowHover() {
             hoverStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
         });
     }
-    getElement('#super-table').onmouseout = function() {
+    getElement('#super-table').onmouseout = function () {
         if (typeof hoverStyleSheet.cssRules[0] != 'undefined') {
             hoverStyleSheet.deleteRule(0);
         }
@@ -137,15 +126,19 @@ function enableRowHover() {
  */
 function rowStyles(style) {
     rowsStyleSheet = document.createElement("style");
-    rowsStyleSheet.type = "text/css"; 
+    rowsStyleSheet.type = "text/css";
+    rowsStyleSheet.id = 'rowStyleSheet';
     document.head.append(rowsStyleSheet);
     rowsStyleSheet = rowsStyleSheet.sheet;
 
     if (style === 'line') {
         rowsStyleSheet.insertRule('.col div {border-width: 1px 0; border-style: solid; border-color: #CFDFE5;}', 0);
+        rowsStyleSheet.insertRule('.col:first-child div {background-color: white;}', 1);
     } else if (style === 'zebra') {
         rowsStyleSheet.insertRule('.col div:nth-child(even) {background-color: #CFDFE5}', 0);
         rowsStyleSheet.insertRule('.col div:nth-child(odd) {background-color: #FFF}', 1);
+    } else if (style == 'free') {
+        rowsStyleSheet.insertRule('.col:first-child div {background-color: white;}', 0);
     }
 }
 
@@ -156,7 +149,8 @@ function rowStyles(style) {
 function isHeaderFixed(bool) {
     if (bool) {
         headerStyleSheet = document.createElement("style");
-        headerStyleSheet.type = "text/css"; 
+        headerStyleSheet.type = "text/css";
+        headerStyleSheet.id = 'headerStyleSheet';
         document.head.append(headerStyleSheet);
         headerStyleSheet = headerStyleSheet.sheet;
         headerStyleSheet.insertRule('.table-header {padding: 0; position: sticky; top: 0; background-color: white;}', 0);
@@ -170,10 +164,11 @@ function isHeaderFixed(bool) {
 function isfirstColumnFixed(bool) {
     if (bool) {
         columnStyleSheet = document.createElement("style");
-        columnStyleSheet.type = "text/css"; 
+        columnStyleSheet.type = "text/css";
+        columnStyleSheet.id = 'columnStyleSheet';
         document.head.append(columnStyleSheet);
         columnStyleSheet = columnStyleSheet.sheet;
-        columnStyleSheet.insertRule('.col:first-child {position: sticky; left: 0; z-index: 1;}  ', 0);
+        columnStyleSheet.insertRule('.col:first-child {position: sticky; left: 0; z-index: 1;}', 0);
     }
 }
 
@@ -188,9 +183,12 @@ function sortUsersBy(users, property, asc) {
     for (var user in users) {
         sortable.push(users[user]);
     }
-    sortable.sort(function(a, b){
-        if(a[property] < b[property]) return -1;
-        if(a[property] > b[property]) return 1;
+    if (!property) {
+        return sortable;
+    }
+    sortable.sort(function (a, b) {
+        if (a[property] < b[property]) return -1;
+        if (a[property] > b[property]) return 1;
         return 0;
     })
 
@@ -198,4 +196,17 @@ function sortUsersBy(users, property, asc) {
         sortable.reverse();
     }
     return sortable;
+}
+
+/**
+ * jQuery's extend equivalent
+ * @param {object} obj 
+ * @param {object} src
+ * @returns {object}
+ */
+function extend(obj, src){
+    for(var key in src)
+        if(src.hasOwnProperty(key))
+            obj[key] = src[key];
+    return obj;
 }
