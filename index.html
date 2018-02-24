@@ -14,12 +14,13 @@
     </div>
     <script>
         var target = getElement('#super-table'); //Element where table is generated
+        // Parameters example :
         var object = {
             element: target,
             data: users,
             options: {
-                fixedHeader: false,
-                fixedColumn: false,
+                fixedHeader: true,
+                fixedColumn: true,
                 rowHeight: 50,
                 rowStyle: 'line',
                 rowHoverHeight: {
