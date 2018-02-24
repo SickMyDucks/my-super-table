@@ -118,12 +118,12 @@ function enableRowHover(bool) {
                 hoverStyleSheet.deleteRule(0);
             }
             hoverStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7;}', 0);
+            getElement('#super-table').onmouseout = function () {
+                if (typeof hoverStyleSheet.cssRules[0] != 'undefined') {
+                    hoverStyleSheet.deleteRule(0);
+                }
+            }
         });
-    }
-    getElement('#super-table').onmouseout = function () {
-        if (typeof hoverStyleSheet.cssRules[0] != 'undefined') {
-            hoverStyleSheet.deleteRule(0);
-        }
     }
 }
 
@@ -237,11 +237,11 @@ function largerRows(bool, height) {
                 largerRowsStyleSheet.deleteRule(0);
             }
             largerRowsStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {line-height: ' + height + 'px;}', 0);
+            getElement('#super-table').onmouseout = function () {
+                if (typeof largerRowsStyleSheet.cssRules[0] != 'undefined') {
+                    largerRowsStyleSheet.deleteRule(0);
+                }
+            }
         });
-    }
-    getElement('#super-table').onmouseout = function () {
-        if (typeof largerRowsStyleSheet.cssRules[0] != 'undefined') {
-            largerRowsStyleSheet.deleteRule(0);
-        }
     }
 }
