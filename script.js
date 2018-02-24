@@ -7,10 +7,10 @@ function initSuperTable(params) {
     isfirstColumnFixed(params.options.fixedColumn);
     rowStyles(params.options.rowStyle);
     isHeaderFixed(params.options.fixedHeader);
-    generateTable(columns, params.data, params.element);
+    generateTable(columns, users, params.element);
     enableRowHover(params.options.rowMouseOver);
     setRowHeight(params.options.rowHeight);
-    largerRows(params.options.rowHoverHeight.enabled, params.options.rowHoverHeight.height)
+    largerRows(params.options.rowHoverHeight.enabled, params.options.rowHoverHeight.height);
 }
 
 /**
