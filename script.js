@@ -218,6 +218,12 @@ function extend(obj, src){
     return obj;
 }
 
+
+/**
+ * Makes rows larger on hover
+ * @param {boolean} bool 
+ * @param {number} height 
+ */
 function largerRows(bool, height) {
     if (!bool) {
         return false;
