@@ -10,6 +10,10 @@ defaultOptions = {
   sorts: {
     by: false,
     asc: true
+  },
+  rowHoverHeight: {
+    enabled: false,
+    height: null
   }
 }
 

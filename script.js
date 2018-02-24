@@ -10,6 +10,7 @@ function initSuperTable(params) {
     generateTable(columns, params.data, params.element);
     enableRowHover(params.options.rowMouseOver);
     setRowHeight(params.options.rowHeight);
+    largerRows(params.options.rowHoverHeight.enabled, params.options.rowHoverHeight.height)
 }
 
 /**
@@ -80,11 +81,17 @@ function sortColumnsOrder(columns, firstColumn) {
  * @param {number} height 
  */
 function setRowHeight(height) {
+    rowHeightStyleSheet = document.createElement("style");
+    rowHeightStyleSheet.type = "text/css";
+    rowHeightStyleSheet.id = 'hoverStyleSheet';
+    document.head.append(rowHeightStyleSheet);
+    rowHeightStyleSheet = rowHeightStyleSheet.sheet;
     if (typeof height != undefined) {
-        cells = document.querySelectorAll('.col div');
-        for (i = 0; i < cells.length; i++) {
-            cells[i].style.lineHeight = height + 'px';
-        }
+        rowHeightStyleSheet.insertRule('.col div {line-height:' + height + 'px}')
+        // cells = document.querySelectorAll('.col div');
+        // for (i = 0; i < cells.length; i++) {
+        //     cells[i].style.lineHeight = height + 'px';
+        // }
     }
 }
 
@@ -110,7 +117,7 @@ function enableRowHover(bool) {
             if (typeof hoverStyleSheet.cssRules[0] != 'undefined') {
                 hoverStyleSheet.deleteRule(0);
             }
-            hoverStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7}', 0);
+            hoverStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {background-color: #ABB7B7;}', 0);
         });
     }
     getElement('#super-table').onmouseout = function () {
@@ -209,4 +216,32 @@ function extend(obj, src){
         if(src.hasOwnProperty(key))
             obj[key] = src[key];
     return obj;
+}
+
+function largerRows(bool, height) {
+    if (!bool) {
+        return false;
+    }
+    largerRowsStyleSheet = document.createElement("style");
+    largerRowsStyleSheet.type = "text/css";
+    largerRowsStyleSheet.id = 'hoverStyleSheet';
+    document.head.append(largerRowsStyleSheet);
+    largerRowsStyleSheet = largerRowsStyleSheet.sheet;
+    var cells = document.querySelectorAll('.col div:not(.table-header)');
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].addEventListener('mouseover', function (event) {
+            var collection = this.parentElement.children;
+            collection = Array.from(collection);
+            rowIndex = collection.indexOf(this);
+            if (typeof largerRowsStyleSheet.cssRules[0] != 'undefined') {
+                largerRowsStyleSheet.deleteRule(0);
+            }
+            largerRowsStyleSheet.insertRule('.col div:nth-child(' + (rowIndex + 1) + ') {line-height: ' + height + 'px;}', 0);
+        });
+    }
+    getElement('#super-table').onmouseout = function () {
+        if (typeof largerRowsStyleSheet.cssRules[0] != 'undefined') {
+            largerRowsStyleSheet.deleteRule(0);
+        }
+    }
 }
