@@ -1,5 +1,8 @@
-var columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor'];
+var columns = ['name', 'email', 'gender', 'age', 'company', 'eyeColor', 'phone', 'address']; //Add columns you want to display
 
+/**
+ * Don't touch
+ */
 defaultOptions = {
   firstColumn: columns[0],
   rowHeight: 30,
@@ -16,6 +19,10 @@ defaultOptions = {
     height: null
   }
 }
+
+/**
+ * 
+ */
 
 var users = [
   {
